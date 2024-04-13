@@ -17,7 +17,7 @@ class InputEmbeddings(nn.Module):
 
 class PositionalEncoding(nn.Module):
 
-    def __init__(self, d_model: int, seq_len, dropout: float) -> None:
+    def __init__(self, d_model: int, seq_len: int, dropout: float) -> None:
         super().__init__()
         self.d_model = d_model
         self.seq_len = seq_len
@@ -188,7 +188,7 @@ class DecoderBlock(nn.Module):
         self.self_attention_block = self_attention_block
         self.cross_attention_block = cross_attention_block
         self.feed_forward_block = feed_forward_block
-        self.residual_connections = nn.Module(
+        self.residual_connections = nn.ModuleList(
             [ResidualConnection(dropout) for _ in range(3)]
         )
 
@@ -310,7 +310,7 @@ def build_transformer(
 
     # Create the encoder and the decoder
     encoder = Encoder(nn.ModuleList(encoder_blocks))
-    decoder = Decoder(nn.ModuleList(decoder_block))
+    decoder = Decoder(nn.ModuleList(decoder_blocks))
 
     # Create the projection layer
     projection_layer = ProjectionLayer(d_model, tgt_vocab_size)
